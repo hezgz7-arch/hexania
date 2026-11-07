@@ -36,7 +36,7 @@ async function chooseAddress(list: LanAddress[]): Promise<LanAddress | null> {
 }
 
 async function main(): Promise<void> {
-  const cloudUrl = process.env.PUBLIC_URL?.replace(/\/+$/, '');
+  const cloudUrl = (process.env.PUBLIC_URL ?? process.env.RENDER_EXTERNAL_URL)?.replace(/\/+$/, '');
   let publicUrl: string;
   if (cloudUrl) publicUrl = cloudUrl;
   else {
