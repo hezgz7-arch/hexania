@@ -1,15 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   EngineError,
-  activePlayerId,
   applyAction,
+  chooseBotAction,
   getLegalActions,
   getPlayerView,
-  listActions,
   longestRoadFor,
-  nextInt,
   totalVP,
-  type Action,
   type GameState,
   type Resource,
 } from '../src';
@@ -67,65 +64,13 @@ function checkInvariants(s: GameState, n: number): void {
   if (s.phase !== 'finished') for (const p of s.players) expect(totalVP(s, p)).toBeLessThan(16);
 }
 
-function pick<T>(h: { rng: number }, xs: T[]): T {
-  return xs[nextInt(h, xs.length)]!;
-}
-
-/** Bot that prefers building, rarely trades, otherwise ends its turn. */
-function chooseAction(s: GameState, h: { rng: number }): Action {
-  if (s.phase === 'discard') {
-    const pid = Object.keys(s.pendingDiscards)[0]!;
-    return listActions(s, pid).find((a) => a.type === 'DISCARD')!;
-  }
-  const pid = activePlayerId(s)!;
-  const acts = listActions(s, pid);
-  const of = (...t: string[]) => acts.filter((a) => t.includes(a.type));
-
-  if (s.phase === 'main' && s.trades.length && nextInt(h, 100) < 60) {
-    // let somebody answer / the owner confirm
-    const owner = s.trades[0]!.from;
-    const confirm = listActions(s, owner).filter((a) => a.type === 'CONFIRM_TRADE');
-    if (confirm.length && nextInt(h, 100) < 70) return pick(h, confirm);
-    const others = s.players.map((p) => p.id).filter((id) => id !== owner);
-    for (const o of others) {
-      const resp = listActions(s, o).filter((a) => a.type === 'RESPOND_TRADE');
-      if (resp.length) return pick(h, resp);
-    }
-  }
-
-  const prio = ['BUILD_CITY', 'BUILD_SETTLEMENT', 'BUY_DEV_CARD', 'PLAY_KNIGHT', 'PLAY_ROAD_BUILDING', 'PLAY_YEAR_OF_PLENTY', 'PLAY_MONOPOLY'];
-  if (s.phase === 'main' || s.phase === 'special') {
-    for (const t of prio) {
-      const c = of(t);
-      if (c.length && (t !== 'PLAY_MONOPOLY' || nextInt(h, 100) < 30)) return pick(h, c);
-    }
-    const roads = of('BUILD_ROAD');
-    if (roads.length && nextInt(h, 100) < 45) return pick(h, roads);
-    if (s.phase === 'main') {
-      if (nextInt(h, 100) < 8) {
-        const bt = of('BANK_TRADE');
-        if (bt.length) return pick(h, bt);
-      }
-      if (nextInt(h, 100) < 6) {
-        const o = listActions(s, pid, { includeTrades: true }).filter((a) => a.type === 'OFFER_TRADE');
-        if (o.length) return pick(h, o);
-      }
-    }
-  }
-  if (s.phase === 'setup') return acts[nextInt(h, acts.length)]!;
-  const forced = of('ROLL_DICE', 'MOVE_ROBBER', 'BUILD_ROAD', 'END_TURN', 'PASS_SPECIAL');
-  if (s.phase === 'roll') return of('ROLL_DICE', 'PLAY_KNIGHT').find((a) => a.type === 'ROLL_DICE')!;
-  if (s.phase === 'robber') return pick(h, of('MOVE_ROBBER'));
-  if (s.phase === 'roadBuilding') return pick(h, of('BUILD_ROAD'));
-  return forced.find((a) => a.type === 'END_TURN' || a.type === 'PASS_SPECIAL') ?? forced[0]!;
-}
-
 export function play(n: number, seed: number): { finished: boolean; actions: number } {
   let s = newGame(n, seed, seed % 2 ? 'spiral' : 'balanced');
   const h = { rng: seed * 2654435761 };
   let actions = 0;
   while (s.phase !== 'finished' && actions < MAX_ACTIONS) {
-    const a = chooseAction(s, h);
+    const a = chooseBotAction(s, h);
+    if (!a) throw new Error(`bot has no action in phase ${s.phase} (seed ${seed}, n ${n})`);
     try {
       s = applyAction(s, a).state;
     } catch (e) {

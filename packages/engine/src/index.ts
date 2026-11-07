@@ -29,3 +29,5 @@ export {
   getPlayer,
 } from './queries';
 export { nextFloat, nextInt, shuffle, rollDie } from './rng';
+export { chooseBotAction, type BotOptions } from './bot';
+export * from './protocol';
