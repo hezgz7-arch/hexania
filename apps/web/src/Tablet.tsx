@@ -4,7 +4,7 @@ import { RESOURCES, type GameEvent, type GameView, type NumberMode, type RoomInf
 import { BoardSvg, type Burst } from './BoardSvg';
 import { Countdown, ConnBanner, Splash, Toast, WakingScreen, useWakeLock } from './common';
 import { DevIcon, Die, PieceIcon, ResIcon } from './Icons';
-import { COLOR_ES, PLAYER_HEX, describeEvent, fmtCounts, nameOf } from './lib';
+import { COLOR_ES, PLAYER_HEX, describeEvent, fmtCounts, nameOf, pcVars } from './lib';
 import { useRoom } from './net';
 import { isMuted, play, setMuted, unlockAudio } from './sound';
 
@@ -138,7 +138,7 @@ export function Tablet({ room }: { room: string }) {
 
 function SeatCard({ seat, canEdit, host }: { seat: SeatInfo; canEdit: boolean; host: (c: import('@hexania/engine').HostCommand) => Promise<unknown> }) {
   return (
-    <li className="seat-card" style={{ ['--pc' as string]: PLAYER_HEX[seat.color] }}>
+    <li className="seat-card" style={{ ...pcVars(PLAYER_HEX[seat.color]) }}>
       <span className="seat-dot" aria-hidden />
       <span className="seat-name">{seat.name}</span>
       <span className="seat-state">
@@ -261,7 +261,7 @@ function Game({
 
   return (
     <div className="game">
-      <header className="topbar" style={{ ['--pc' as string]: activeColor }}>
+      <header className="topbar" style={{ ...pcVars(activeColor) }}>
         <div className="banner">
           <span className="banner-dot" aria-hidden />
           <span className="banner-text">{info.paused ? 'Partida en pausa' : banner(view)}</span>
@@ -285,9 +285,10 @@ function Game({
           const seat = seatOf(p.id);
           const turn = view.active === p.id;
           return (
-            <div key={p.id} className={`pcard${turn ? ' active' : ''}${seat && !seat.bot && !seat.connected ? ' away' : ''}`} style={{ ['--pc' as string]: PLAYER_HEX[p.color] }}>
+            <div key={p.id} className={`pcard${turn ? ' active' : ''}${seat && !seat.bot && !seat.connected ? ' away' : ''}`} style={{ ...pcVars(PLAYER_HEX[p.color]) }}>
+              {turn && <span className="ribbon" aria-hidden />}
               <div className="pcard-head">
-                <span className="seat-dot" aria-hidden />
+                <span className="pawn" aria-hidden />
                 <span className="pname">{p.name}</span>
                 {seat?.bot && <span className="tag">bot</span>}
                 {seat && !seat.bot && !seat.connected && <span className="tag warn">sin conexión</span>}
@@ -335,10 +336,10 @@ function Game({
             <>
               <Die n={view.lastRoll[0]} rolling={rolling} />
               <Die n={view.lastRoll[1]} rolling={rolling} />
-              <span className="dice-total">{rolling ? '…' : view.lastRoll[0] + view.lastRoll[1]}</span>
+              <span className="dice-total oct">{rolling ? '…' : view.lastRoll[0] + view.lastRoll[1]}</span>
             </>
           ) : (
-            <span className="muted">Aún sin tiradas</span>
+            <span className="muted no-roll"><img src="/art/shield-help.png" alt="" /> Aún sin tiradas</span>
           )}
         </div>
 
@@ -451,7 +452,7 @@ function Finale({ view, info, isHost, host }: { view: GameView; info: RoomInfo; 
     return e && e[1] > 0 ? `${nameOf(view.players, e[0])} (${e[1]})` : '—';
   };
   return (
-    <main className="finale" style={{ ['--pc' as string]: PLAYER_HEX[winner?.color ?? 'red'] }}>
+    <main className="finale" style={{ ...pcVars(PLAYER_HEX[winner?.color ?? 'red']) }}>
       <section className="finale-hero">
         <p className="lede">Fin de la partida</p>
         <img className="trophy" src="/art/ico-trophy.png" alt="" />
@@ -463,7 +464,7 @@ function Finale({ view, info, isHost, host }: { view: GameView; info: RoomInfo; 
           {scores.map((s, i) => {
             const p = view.players.find((x) => x.id === s.playerId)!;
             return (
-              <li key={s.playerId} style={{ ['--pc' as string]: PLAYER_HEX[p.color] }} className={i === 0 ? 'first' : ''}>
+              <li key={s.playerId} style={{ ...pcVars(PLAYER_HEX[p.color]) }} className={i === 0 ? 'first' : ''}>
                 <span className="rank">{i + 1}</span>
                 <span className="pname">{p.name}</span>
                 <span className="muted small">

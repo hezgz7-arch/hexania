@@ -17,7 +17,7 @@ import {
 import { BoardSvg, type Picked, type Targets } from './BoardSvg';
 import { ConnBanner, Countdown, Splash, Toast, WakingScreen, useWakeLock } from './common';
 import { DevIcon, PieceIcon, ResIcon } from './Icons';
-import { COLOR_ES, DEV_ES, DEV_HINT, PLAYER_HEX, RES_ES, fmtCounts, handTotal, nameOf } from './lib';
+import { COLOR_ES, DEV_ES, DEV_HINT, PLAYER_HEX, RES_ES, fmtCounts, handTotal, nameOf, pcVars } from './lib';
 import { useRoom } from './net';
 import { play, unlockAudio, vibrate } from './sound';
 
@@ -133,7 +133,7 @@ function JoinForm({ room, net }: { room: string; net: ReturnType<typeof useRoom>
         <div className="seat-choice">
           <p>Elige el asiento que quieres ocupar:</p>
           {err.vacant?.map((s) => (
-            <button key={s.playerId} className="btn" style={{ ['--pc' as string]: PLAYER_HEX[s.color] }} onClick={() => void submit(s.playerId)}>
+            <button key={s.playerId} className="btn" style={{ ...pcVars(PLAYER_HEX[s.color]) }} onClick={() => void submit(s.playerId)}>
               <span className="seat-dot" /> {s.name}
             </button>
           ))}
@@ -159,13 +159,13 @@ function Waiting({ net }: { net: ReturnType<typeof useRoom> }) {
     <main className="join">
       <h1 className="logo">Hexania</h1>
       <p className="lede">Estás dentro</p>
-      <div className="me-chip" style={{ ['--pc' as string]: PLAYER_HEX[me?.color ?? 'red'] }}>
+      <div className="me-chip" style={{ ...pcVars(PLAYER_HEX[me?.color ?? 'red']) }}>
         <span className="seat-dot" /> {me?.name}
       </div>
       <p className="muted">Espera a que el anfitrión empiece la partida desde el tablero.</p>
       <ul className="seat-list">
         {st.room.seats.map((s) => (
-          <li key={s.playerId} className="seat-card" style={{ ['--pc' as string]: PLAYER_HEX[s.color] }}>
+          <li key={s.playerId} className="seat-card" style={{ ...pcVars(PLAYER_HEX[s.color]) }}>
             <span className="seat-dot" />
             <span className="seat-name">{s.name}</span>
             <span className="seat-state">{s.bot ? 'Bot' : s.vacant ? 'Libre' : s.connected ? 'Conectado' : 'Desconectado'}</span>
@@ -297,7 +297,7 @@ function GamePhone({ view, info, act, skew }: { view: GameView; info: import('@h
   })();
 
   return (
-    <div className="gp" style={{ ['--pc' as string]: color }}>
+    <div className="gp" style={{ ...pcVars(color) }}>
       <header className="gp-top">
         <span className="seat-dot" aria-hidden />
         <div className="gp-who">
@@ -346,7 +346,7 @@ function GamePhone({ view, info, act, skew }: { view: GameView; info: import('@h
           {view.players
             .filter((p) => p.id !== me.id)
             .map((p) => (
-              <div key={p.id} className={`other${view.active === p.id ? ' active' : ''}`} style={{ ['--pc' as string]: PLAYER_HEX[p.color] }}>
+              <div key={p.id} className={`other${view.active === p.id ? ' active' : ''}`} style={{ ...pcVars(PLAYER_HEX[p.color]) }}>
                 <span className="seat-dot" />
                 <span className="pname">{p.name}</span>
                 <span className="muted small">{p.handCount} cartas</span>
@@ -495,7 +495,7 @@ function ActionBar({
           Construir
         </button>
         <button className="btn" onClick={() => setMode({ t: 'trade' })}>
-          Comerciar
+          <img className="ico" src="/art/shield-swap.png" alt="" /> Comerciar
         </button>
         <button className="btn" onClick={() => setMode({ t: 'cards' })}>
           Cartas
@@ -539,7 +539,7 @@ function Offers({
   return (
     <section className="offers" aria-label="Tratos">
       {incoming.map((t: TradeOffer) => (
-        <div key={t.id} className="offer-card" style={{ ['--pc' as string]: PLAYER_HEX[view.players.find((p) => p.id === t.from)?.color ?? 'red'] }}>
+        <div key={t.id} className="offer-card" style={{ ...pcVars(PLAYER_HEX[view.players.find((p) => p.id === t.from)?.color ?? 'red']) }}>
           {t.to === null ? (
             <>
               <p>
@@ -662,7 +662,7 @@ function RobberPicker({ view, send }: { view: GameView; send: (a: ClientAction) 
         <div className="victims">
           <p>¿A quién robas?</p>
           {opts.victims.map((v) => (
-            <button key={v} className="btn" style={{ ['--pc' as string]: playerHex(view, v) }} onClick={() => go(v)}>
+            <button key={v} className="btn" style={{ ...pcVars(playerHex(view, v)) }} onClick={() => go(v)}>
               <span className="seat-dot" /> {nameOf(view.players, v)} ({view.players.find((p) => p.id === v)?.handCount} cartas)
             </button>
           ))}
@@ -901,7 +901,7 @@ function FinishedCard({ view }: { view: GameView }) {
         {scores.map((s, i) => {
           const p = view.players.find((x) => x.id === s.playerId)!;
           return (
-            <li key={s.playerId} style={{ ['--pc' as string]: PLAYER_HEX[p.color] }} className={i === 0 ? 'first' : ''}>
+            <li key={s.playerId} style={{ ...pcVars(PLAYER_HEX[p.color]) }} className={i === 0 ? 'first' : ''}>
               <span className="rank">{i + 1}</span>
               <span className="pname">{p.name}</span>
               <b className="vp">{s.total}</b>

@@ -11,7 +11,7 @@ import {
   type ResourceCounts,
 } from '../src';
 
-const COLORS: PlayerColor[] = ['red', 'blue', 'white', 'orange', 'green', 'brown'];
+const COLORS: PlayerColor[] = ['red', 'blue', 'white', 'orange', 'green', 'purple'];
 
 export function newGame(n = 4, seed = 1, mode: 'spiral' | 'balanced' = 'spiral'): GameState {
   return createGame(

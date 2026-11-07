@@ -1555,3 +1555,80 @@ h3,
   font-size: 0.85rem;
   margin: 0;
 }
+
+/* ---------- player pieces and badges cut from the design sheet ---------- */
+.seat-dot {
+  width: 20px;
+  height: 20px;
+  border: 0;
+  background: var(--marble) center / contain no-repeat;
+  box-shadow: none !important;
+}
+.pawn {
+  flex: none;
+  width: 26px;
+  height: 40px;
+  margin: -6px 0 -6px -2px;
+  background: var(--pawn) center bottom / contain no-repeat;
+  filter: drop-shadow(0 2px 2px #3a241099);
+}
+.pcard {
+  position: relative;
+}
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 70px;
+  width: 22px;
+  height: 30px;
+  background: var(--rib) center top / 100% 100% no-repeat;
+  filter: drop-shadow(0 2px 2px #3a241099);
+  pointer-events: none;
+}
+.dice-total.oct {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 52px;
+  min-width: 0;
+  background: url(/art/oct-gold.png) center / contain no-repeat;
+  color: #3a2410;
+  font-size: 1.5rem;
+  text-shadow: 0 1px 0 #fff8;
+}
+.no-roll {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.no-roll img {
+  width: 34px;
+}
+.turn-no {
+  display: inline-grid;
+  place-items: center;
+  min-width: 82px;
+  height: 30px;
+  padding: 0 12px;
+  background: url(/art/oct-gray.png) center / 100% 100% no-repeat;
+  color: #fff4dc;
+  font-weight: 700;
+  text-shadow: 0 1px 1px #000a;
+}
+.vp {
+  min-width: 52px;
+  height: 58px;
+  padding: 0 8px;
+  justify-content: center;
+  align-items: center;
+  background: url(/art/hex-white.png) center / contain no-repeat;
+  color: #3a2410 !important;
+}
+.btn .ico[src*='shield'] {
+  width: 1.6em;
+  height: 1.5em;
+}
+h3 {
+  padding-bottom: 6px;
+  background: url(/art/bar-wood.png) left bottom / 100% 5px no-repeat;
+}

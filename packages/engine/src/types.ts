@@ -12,8 +12,8 @@ export type DevCardType = 'knight' | 'victoryPoint' | 'roadBuilding' | 'yearOfPl
 export const DEV_TYPES: readonly DevCardType[] = ['knight', 'victoryPoint', 'roadBuilding', 'yearOfPlenty', 'monopoly'];
 export type ResourceCounts = Record<Resource, number>;
 export type DevCounts = Record<DevCardType, number>;
-export type PlayerColor = 'red' | 'blue' | 'white' | 'orange' | 'green' | 'brown';
-export const PLAYER_COLORS: readonly PlayerColor[] = ['red', 'blue', 'white', 'orange', 'green', 'brown'];
+export type PlayerColor = 'red' | 'blue' | 'white' | 'orange' | 'green' | 'purple';
+export const PLAYER_COLORS: readonly PlayerColor[] = ['red', 'blue', 'white', 'orange', 'green', 'purple'];
 export type PortType = Resource | 'generic';
 export type NumberMode = 'spiral' | 'balanced';
 

@@ -46,7 +46,7 @@ export const PLAYER_HEX: Record<PlayerColor, string> = {
   white: '#efeee8',
   orange: '#f08c28',
   green: '#35a96a',
-  brown: '#8c5a3c',
+  purple: '#8a4fc7',
 };
 export const COLOR_ES: Record<PlayerColor, string> = {
   red: 'Rojo',
@@ -54,7 +54,7 @@ export const COLOR_ES: Record<PlayerColor, string> = {
   white: 'Blanco',
   orange: 'Naranja',
   green: 'Verde',
-  brown: 'Marrón',
+  purple: 'Morado',
 };
 export const DEV_ES: Record<DevCardType, string> = {
   knight: 'Caballero',
@@ -147,3 +147,11 @@ export function fmtClock(ms: number): string {
   const s = Math.max(0, Math.ceil(ms / 1000));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
+
+/** Player colour key for a hex value from PLAYER_HEX (sprites are named after the key). */
+export const colorKey = (hex: string): PlayerColor => (Object.keys(PLAYER_HEX) as PlayerColor[]).find((k) => PLAYER_HEX[k] === hex) ?? 'red';
+/** CSS variables a player-coloured element needs: tint, marble, pawn and ribbon sprites. */
+export const pcVars = (hex: string): Record<string, string> => {
+  const k = colorKey(hex);
+  return { '--pc': hex, '--marble': `url(/art/marble-${k}.png)`, '--pawn': `url(/art/pawn-${k}.png)`, '--rib': `url(/art/rib-${k}.png)` };
+};

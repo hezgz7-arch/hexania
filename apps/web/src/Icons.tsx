@@ -1,5 +1,5 @@
 import type { Resource } from '@hexania/engine';
-import { RES_COLOR, RES_ES } from './lib';
+import { colorKey, RES_COLOR, RES_ES } from './lib';
 
 const GLYPH: Record<Resource, JSX.Element> = {
   lumber: (
@@ -51,19 +51,15 @@ export function ResIcon({ r, size = 28, title }: { r: Resource; size?: number; t
   return <img src={`/art/res-${r}.png`} width={size} height={size} alt={RES_ES[r]} title={title ? RES_ES[r] : undefined} className="res-icon" draggable={false} />;
 }
 
-/** Piece silhouettes (24px grid, drawn in the player's colour). */
+/** Piece icons: the road stays a drawn bar, houses and castles are the sprites from the design sheet. */
 export function PieceIcon({ kind, color, size = 22 }: { kind: 'road' | 'settlement' | 'city'; color: string; size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
-      {kind === 'road' && <rect x="2" y="9" width="20" height="6" rx="2" fill={color} stroke="#0b1c22" strokeWidth="1.4" />}
-      {kind === 'settlement' && (
-        <path d="M12 3l8 7v10H4V10z" fill={color} stroke="#0b1c22" strokeWidth="1.4" strokeLinejoin="round" />
-      )}
-      {kind === 'city' && (
-        <path d="M3 21V12l5-3 5 3v-6l4-3 4 3v18z" fill={color} stroke="#0b1c22" strokeWidth="1.4" strokeLinejoin="round" />
-      )}
-    </svg>
-  );
+  if (kind === 'road')
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
+        <rect x="2" y="9" width="20" height="6" rx="2" fill={color} stroke="#0b1c22" strokeWidth="1.4" />
+      </svg>
+    );
+  return <img src={`/art/${kind === 'city' ? 'city' : 'house'}-${colorKey(color)}.png`} height={size} alt="" aria-hidden draggable={false} style={{ width: 'auto' }} />;
 }
 
 export function DevIcon({ size = 22 }: { size?: number }) {

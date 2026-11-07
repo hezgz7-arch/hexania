@@ -81,37 +81,15 @@ function shade(hex: string, k: number): string {
   return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`;
 }
 
-// Isometric wooden-toy pieces: lit left wall, shaded right wall, bright roof.
+/** Settlement / city sprites cut from the design sheet (65x62 house, 128x170 castle), anchored at their base. */
 function Settlement({ x, y, color, big }: { x: number; y: number; color: string; big?: boolean }) {
-  const k = big ? 1.12 : 0.9;
-  const lit = shade(color, 0.28);
-  const dark = shade(color, -0.32);
-  const roofL = shade(color, 0.12);
-  const roofR = shade(color, -0.12);
-  const ink = '#3a2410';
+  const name = (Object.keys(PLAYER_HEX) as (keyof typeof PLAYER_HEX)[]).find((k) => PLAYER_HEX[k] === color) ?? 'red';
+  const w = big ? 40 : 30;
+  const h = big ? (w * 170) / 128 : (w * 62) / 65;
   return (
-    <g transform={`translate(${x},${y}) scale(${k})`} filter="url(#piece-shadow)" strokeLinejoin="round" stroke={ink} strokeWidth="1.6">
-      <ellipse cx="0" cy="12" rx="17" ry="5" fill="#000" opacity=".28" stroke="none" />
-      {big ? (
-        <>
-          <path d="M-16 11V-3l9-4v18z" fill={lit} />
-          <path d="M-7 11V-7l9 4v18z" fill={dark} />
-          <path d="M-18 -3l11-8 9 5-11 7z" fill={roofL} />
-          <path d="M-1 8V-12l9-5 9 5v20z" fill={lit} />
-          <path d="M8 8V-17l9 5v20z" fill={dark} transform="translate(0,0)" />
-          <path d="M-3 -12l11-8 11 8-11 5z" fill={roofR} />
-          <rect x="3" y="-4" width="4" height="6" fill={ink} opacity=".45" stroke="none" />
-          <rect x="11" y="-4" width="4" height="6" fill={ink} opacity=".45" stroke="none" />
-        </>
-      ) : (
-        <>
-          <path d="M-13 11V-1l13 5v15z" fill={lit} />
-          <path d="M0 15V4l13-5v12z" fill={dark} />
-          <path d="M-15 -1L0 -13l15 12-15 5z" fill={roofL} />
-          <path d="M0 -13l15 12-15 5z" fill={roofR} />
-          <rect x="-4" y="8" width="5" height="6" fill={ink} opacity=".45" stroke="none" />
-        </>
-      )}
+    <g filter="url(#piece-shadow)">
+      <ellipse cx={x} cy={y + 9} rx={w * 0.46} ry={w * 0.15} fill="#000" opacity=".28" />
+      <image href={`/art/${big ? 'city' : 'house'}-${name}.png`} x={x - w / 2} y={y + 11 - h} width={w} height={h} />
     </g>
   );
 }
@@ -232,7 +210,7 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
         <g key={`port-${p.edgeId}`} className="port">
           <path d={`M${p.a.x * S},${p.a.y * S}L${p.px},${p.py}L${p.b.x * S},${p.b.y * S}`} stroke="#8a5a1c" strokeWidth="4" fill="none" strokeLinecap="round" />
           {p.type === 'generic' && <path d={`M${p.px},${p.py - 22}L${p.px + 19},${p.py - 11}V${p.py + 8}L${p.px},${p.py + 22}L${p.px - 19},${p.py + 8}V${p.py - 11}Z`} fill="#f6e6bd" stroke="#6a3f18" strokeWidth="3" strokeLinejoin="round" />}
-          {p.type !== 'generic' ? <image href={`/art/port-${p.type}.png`} x={p.px - 29} y={p.py - 35} width="58" height="70" /> : <text x={p.px} y={p.py + 5} textAnchor="middle" className="port-label">{PORT_LABEL(p.type)}</text>}
+          {p.type !== 'generic' ? <image href={`/art/port-${p.type}.png`} x={p.px - 29} y={p.py - 35} width="58" height="70" /> : <g><image href="/art/shield-ship.png" x={p.px - 28} y={p.py - 25} width="56" height="48" /><text x={p.px} y={p.py + 21} textAnchor="middle" className="port-label">{PORT_LABEL(p.type)}</text></g>}
         </g>
       ))}
 
