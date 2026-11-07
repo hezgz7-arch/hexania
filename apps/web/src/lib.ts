@@ -153,5 +153,5 @@ export const colorKey = (hex: string): PlayerColor => (Object.keys(PLAYER_HEX) a
 /** CSS variables a player-coloured element needs: tint, marble, pawn and ribbon sprites. */
 export const pcVars = (hex: string): Record<string, string> => {
   const k = colorKey(hex);
-  return { '--pc': hex, '--marble': `url(/art/marble-${k}.png)`, '--pawn': `url(/art/pawn-${k}.png)`, '--rib': `url(/art/rib-${k}.png)` };
+  return { '--pc': hex, '--marble': `url(/art/marble-${k}.png)`, '--pawn': `url(/art/pawn-${k}.svg)`, '--rib': `url(/art/rib-${k}.png)` };
 };

@@ -84,7 +84,7 @@ function shade(hex: string, k: number): string {
 /** Settlement / city sprites cut from the design sheet (65x62 house, 128x170 castle), anchored at their base. */
 function Settlement({ x, y, color, big }: { x: number; y: number; color: string; big?: boolean }) {
   const name = (Object.keys(PLAYER_HEX) as (keyof typeof PLAYER_HEX)[]).find((k) => PLAYER_HEX[k] === color) ?? 'red';
-  const w = big ? 40 : 30;
+  const w = big ? 48 : 38;
   const h = big ? (w * 170) / 128 : (w * 62) / 65;
   return (
     <g filter="url(#piece-shadow)">
@@ -101,7 +101,7 @@ function Road({ x1, y1, x2, y2, color }: { x1: number; y1: number; x2: number; y
   if (ang <= -90) ang += 180;
   const flip = ang > 0;
   const rot = flip ? ang - 30 : ang + 30;
-  const w = 50;
+  const w = 42;
   const h = (w * 78) / 88;
   return (
     <g transform={`translate(${(x1 + x2) / 2},${(y1 + y2) / 2 + 1}) rotate(${rot}) scale(${flip ? -1 : 1},1)`} filter="url(#piece-shadow)">
