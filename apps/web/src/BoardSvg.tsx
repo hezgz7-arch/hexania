@@ -136,13 +136,18 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
     return m;
   }, [view.players]);
 
+  // the sea sits inside the wooden frame art (470x352, inner sea 420x305 at 25,24)
   const bounds = useMemo(() => {
     const xs = geo.vertices.map((v) => v.x * S);
     const ys = geo.vertices.map((v) => v.y * S);
     const pad = S * 1.15;
-    const minX = Math.min(...xs) - pad;
-    const minY = Math.min(...ys) - pad;
-    return { x: minX, y: minY, w: Math.max(...xs) + pad - minX, h: Math.max(...ys) + pad - minY };
+    const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+    const cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+    const cw = Math.max(...xs) - Math.min(...xs) + 2 * pad;
+    const ch = Math.max(...ys) - Math.min(...ys) + 2 * pad;
+    const fw = Math.max((cw * 470) / 420, (ch * 470) / 305);
+    const k = fw / 470;
+    return { x: cx - fw / 2, y: cy - (352 * k) / 2, w: fw, h: 352 * k, k };
   }, [geo]);
 
   const vx = (id: number) => geo.vertices[id]!;
@@ -214,9 +219,13 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
     >
       <Patterns />
 
-      {/* sea and wooden frame */}
-      <rect x={bounds.x + 4} y={bounds.y + 4} width={bounds.w - 8} height={bounds.h - 8} rx="38" fill="#7a4a22" stroke="#4a2a10" strokeWidth="4" />
-      <rect x={bounds.x + 14} y={bounds.y + 14} width={bounds.w - 28} height={bounds.h - 28} rx="30" fill="url(#sea)" stroke="#e2b04a" strokeWidth="3" />
+      {/* sea under the wooden frame art */}
+      <polygon
+        points={[[115, 24], [365, 24], [445, 114], [445, 259], [365, 329], [115, 329], [25, 259], [25, 114]].map(([px, py]) => `${bounds.x + (px! - 4 * Math.sign(px! - 235)) * bounds.k},${bounds.y + (py! - 4 * Math.sign(py! - 176)) * bounds.k}`).join(' ')}
+        fill="url(#sea)"
+      />
+
+      <image href="/art/frame.png" x={bounds.x} y={bounds.y} width={bounds.w} height={bounds.h} pointerEvents="none" />
 
       {/* ports: piers first so hexes overlap their feet */}
       {ports.map((p) => (

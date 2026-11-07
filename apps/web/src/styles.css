@@ -1434,3 +1434,124 @@ h3,
 .board-svg image {
   image-rendering: auto;
 }
+
+/* ---------- sprite icons and award cards ---------- */
+.ico {
+  width: 1.25em;
+  height: 1.25em;
+  vertical-align: -0.28em;
+  margin-right: 0.15em;
+  object-fit: contain;
+}
+.ico.off {
+  filter: grayscale(1) opacity(0.6);
+}
+.res-icon {
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px #3a241088);
+}
+.trophy {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px #3a241099);
+}
+.awards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.award {
+  margin: 0;
+  position: relative;
+  filter: drop-shadow(0 3px 3px #3a241077);
+}
+.award:not(.held) img {
+  filter: grayscale(0.7) brightness(0.92);
+}
+.award img {
+  width: 100%;
+  display: block;
+}
+.award figcaption {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 5%;
+  padding: 1px 4px;
+  border-radius: 6px;
+  text-align: center;
+  font: 700 0.72rem var(--font-body);
+  background: var(--surface-2);
+  color: #fff;
+  text-shadow: 0 1px 1px #0008;
+  border: 1px solid var(--wood-dark);
+}
+.award:not(.held) figcaption {
+  color: var(--text-dim);
+  text-shadow: none;
+}
+.trade-card {
+  float: right;
+  width: 92px;
+  margin: 0 0 6px 10px;
+  filter: drop-shadow(0 2px 3px #3a241077);
+}
+.board-svg {
+  filter: drop-shadow(0 6px 10px #3a241066);
+}
+
+/* ---------- main menu panel (art cut from DISEÑO.png; our buttons cover the painted ones) ---------- */
+.menu {
+  position: relative;
+  width: min(380px, 92vw);
+  aspect-ratio: 314 / 284;
+  filter: drop-shadow(0 10px 18px #3a241099);
+}
+.menu img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.menu-btn {
+  position: absolute;
+  left: 24.6%;
+  width: 50.6%;
+  height: 12.6%;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  border: 1px solid #5a3519;
+  background: linear-gradient(#f7d06c, #d99a2b);
+  box-shadow: 0 2px 0 #5a3519, inset 0 1px 0 #fff8;
+  color: #3a2410;
+  font: 700 clamp(0.8rem, 3.6vw, 1rem) var(--font-body);
+  text-decoration: none;
+  text-shadow: 0 1px 0 #fff7;
+  cursor: pointer;
+  padding: 0;
+}
+.menu-btn:hover:not(.off) {
+  filter: brightness(1.08);
+}
+.menu-btn:active:not(.off) {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #5a3519;
+}
+.menu-btn.off {
+  filter: grayscale(0.6) brightness(0.9);
+  cursor: default;
+}
+.menu-btn.m1 { top: 27.6%; }
+.menu-btn.m2 { top: 41.7%; }
+.menu-btn.m3 { top: 55.2%; }
+.menu-btn.m4 { top: 69%; }
+.menu-hint {
+  color: #4b3118;
+  font-size: 0.85rem;
+  margin: 0;
+}

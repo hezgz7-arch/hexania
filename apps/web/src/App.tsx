@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Splash } from './common';
 import { store } from './net';
+import { isMuted, setMuted } from './sound';
 import { Phone } from './Phone';
 import { Tablet } from './Tablet';
 
@@ -19,19 +20,52 @@ const go = (to: string) => {
   window.dispatchEvent(new PopStateEvent('popstate'));
 };
 
+/** Most recent room this browser has a seat or host token for, if any. */
+function lastRoom(): string | null {
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i) ?? '';
+      const h = /^hexania:host:(.+)$/.exec(k);
+      if (h) return `/board/${h[1]}`;
+      const t = /^hexania:token:(.+)$/.exec(k);
+      if (t) return `/play/${t[1]}`;
+    }
+  } catch {
+    /* storage blocked */
+  }
+  return null;
+}
+
 function Landing() {
+  const [muted, setM] = useState(isMuted());
+  const last = lastRoom();
+  const link = (to: string) => ({ href: to, onClick: (e: React.MouseEvent) => (e.preventDefault(), go(to)) });
   return (
     <main className="landing">
       <h1 className="logo">Hexania</h1>
       <p className="lede">El tablero en la tablet, tu mano en el móvil.</p>
-      <div className="landing-actions">
-        <a className="btn primary big" href="/board" onClick={(e) => (e.preventDefault(), go('/board'))}>
-          Crear partida (tablet)
+      <nav className="menu" aria-label="Menú principal">
+        <img src="/art/menu.png" alt="" draggable={false} />
+        {last ? (
+          <a className="menu-btn m1" {...link(last)}>
+            Continuar
+          </a>
+        ) : (
+          <span className="menu-btn m1 off" aria-disabled="true">
+            Continuar
+          </span>
+        )}
+        <a className="menu-btn m2" {...link('/board')}>
+          Crear partida
         </a>
-        <a className="btn big" href="/play" onClick={(e) => (e.preventDefault(), go('/play'))}>
-          Unirme con un código (móvil)
+        <a className="menu-btn m3" {...link('/play')}>
+          Unirme
         </a>
-      </div>
+        <button className="menu-btn m4" onClick={() => (setMuted(!muted), setM(!muted))} aria-pressed={muted}>
+          {muted ? 'Sonido: no' : 'Sonido: sí'}
+        </button>
+      </nav>
+      <p className="menu-hint">Crear partida: en la tablet · Unirme: en cada móvil</p>
     </main>
   );
 }

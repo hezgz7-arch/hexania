@@ -270,11 +270,11 @@ function Game({
         <div className="top-actions">
           <span className="turn-no">Turno {view.turn}</span>
           <button className="btn ghost small" onClick={() => (setMuted(!muted), setM(!muted))} aria-pressed={muted}>
-            {muted ? 'Sonido apagado' : 'Sonido'}
+            <img className={`ico${muted ? ' off' : ''}`} src="/art/ico-sound.png" alt="" /> {muted ? 'Sonido apagado' : 'Sonido'}
           </button>
           {isHost && (
             <button className="btn ghost small" onClick={() => setMenu((m) => !m)} aria-expanded={menu}>
-              Anfitrión
+              <img className="ico" src="/art/ico-gear.png" alt="" /> Anfitrión
             </button>
           )}
         </div>
@@ -342,6 +342,18 @@ function Game({
           )}
         </div>
 
+        <div className="awards" aria-label="Premios">
+          {([['army', 'Mayor ejército'], ['road', 'Ruta comercial más larga']] as const).map(([k, label]) => {
+            const holder = view.players.find((p) => (k === 'army' ? p.hasLargestArmy : p.hasLongestRoad));
+            return (
+              <figure key={k} className={`award${holder ? ' held' : ''}`} title={label}>
+                <img src={`/art/card-${k}.png`} alt={label} draggable={false} />
+                <figcaption style={holder ? { background: PLAYER_HEX[holder.color] } : undefined}>{holder ? holder.name : 'Libre'}</figcaption>
+              </figure>
+            );
+          })}
+        </div>
+
         <div className="bank" aria-label="Banco">
           <h3>Banco</h3>
           <div className="bank-row">
@@ -395,7 +407,7 @@ function HostMenu({ view, info, host, close }: { view: GameView; info: RoomInfo;
       </div>
       <div className="host-row">
         <button className="btn" onClick={() => void host({ cmd: info.paused ? 'resume' : 'pause' })}>
-          {info.paused ? 'Reanudar' : 'Pausar'}
+          <img className="ico" src="/art/btn-pause.png" alt="" /> {info.paused ? 'Reanudar' : 'Pausar'}
         </button>
         <button className="btn" disabled={!info.canUndo} onClick={() => void host({ cmd: 'undo' })}>
           Deshacer última construcción
@@ -442,6 +454,7 @@ function Finale({ view, info, isHost, host }: { view: GameView; info: RoomInfo; 
     <main className="finale" style={{ ['--pc' as string]: PLAYER_HEX[winner?.color ?? 'red'] }}>
       <section className="finale-hero">
         <p className="lede">Fin de la partida</p>
+        <img className="trophy" src="/art/ico-trophy.png" alt="" />
         <h1 className="winner">{winner?.name ?? '—'}</h1>
         <p className="muted">
           gana con {scores.find((s) => s.playerId === view.winner)?.total ?? 10} puntos en {view.turn} turnos
@@ -468,7 +481,9 @@ function Finale({ view, info, isHost, host }: { view: GameView; info: RoomInfo; 
         )}
       </section>
       <section className="finale-stats">
-        <h2>Estadísticas</h2>
+        <h2>
+          <img className="ico" src="/art/ico-bars.png" alt="" /> Estadísticas
+        </h2>
         <h3>Resultado de los dados</h3>
         <div className="histogram" role="img" aria-label="Histograma de tiradas de dados">
           {Array.from({ length: 11 }, (_, i) => i + 2).map((n) => (

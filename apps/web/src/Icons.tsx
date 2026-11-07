@@ -48,13 +48,7 @@ const GLYPH: Record<Resource, JSX.Element> = {
 };
 
 export function ResIcon({ r, size = 28, title }: { r: Resource; size?: number; title?: boolean }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" role="img" aria-label={RES_ES[r]} className="res-icon">
-      {title && <title>{RES_ES[r]}</title>}
-      <rect width="24" height="24" rx="6" fill={RES_COLOR[r]} />
-      {GLYPH[r]}
-    </svg>
-  );
+  return <img src={`/art/res-${r}.png`} width={size} height={size} alt={RES_ES[r]} title={title ? RES_ES[r] : undefined} className="res-icon" draggable={false} />;
 }
 
 /** Piece silhouettes (24px grid, drawn in the player's colour). */

@@ -186,7 +186,7 @@ function Sheet({ title, onClose, children }: { title: string; onClose?: () => vo
           <h2>{title}</h2>
           {onClose && (
             <button className="btn ghost small" onClick={onClose}>
-              Cerrar
+              <img className="ico" src="/art/btn-no.png" alt="" /> Cerrar
             </button>
           )}
         </div>
@@ -640,7 +640,7 @@ function PlacePicker({
         <BoardSvg view={view} targets={targets} picked={picked} ghostColor={color} ghostKind={kind} onPick={setPicked} compact />
       </div>
       <button className="btn primary big" disabled={!picked} onClick={() => picked && void onConfirm(picked)}>
-        {picked ? `Construir ${label} aquí` : 'Elige un sitio'}
+        {picked && <img className="ico" src="/art/btn-ok.png" alt="" />} {picked ? `Construir ${label} aquí` : 'Elige un sitio'}
       </button>
     </Sheet>
   );
@@ -823,6 +823,7 @@ function TradeSheet({
   };
   return (
     <Sheet title={counterOf !== undefined ? 'Contraoferta' : 'Comerciar'} onClose={close}>
+      {tab === 'bank' && <img className="trade-card" src="/art/card-trade.png" alt="Tabla de intercambio" draggable={false} />}
       {L.canOffer && counterOf === undefined && (
         <div className="tabs" role="tablist">
           <button role="tab" aria-selected={tab === 'bank'} className={tab === 'bank' ? 'on' : ''} onClick={() => setTab('bank')}>
