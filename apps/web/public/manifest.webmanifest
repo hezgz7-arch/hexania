@@ -1,0 +1,11 @@
+{
+  "name": "Hexania",
+  "short_name": "Hexania",
+  "lang": "es",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1c22",
+  "theme_color": "#0b1c22",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
