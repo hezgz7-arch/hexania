@@ -521,6 +521,7 @@ select {
   flex-direction: column;
   gap: 10px;
   min-height: 0;
+  overflow-y: auto;
 }
 .side > div {
   background: var(--surface);
@@ -572,8 +573,8 @@ select {
   font-size: 0.85rem;
 }
 .log {
-  flex: 1;
-  min-height: 0;
+  flex: 1 0 150px;
+  min-height: 150px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
