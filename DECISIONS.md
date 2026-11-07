@@ -17,3 +17,17 @@ Ambigüedades de la especificación y cómo las resolví. Las reglas (secciones 
 - **Fase de construcción especial (5-6)**: tras cada turno, los demás en orden pueden construir o comprar (sin comerciar ni jugar cartas). Quien no puede hacer nada se salta automáticamente.
 - **Números del tablero**: modo `spiral` (orden oficial, empieza en una esquina aleatoria) o `balanced` (6/8 nunca adyacentes).
 - **Determinismo**: el RNG (mulberry32) vive dentro del estado serializable, así que cada partida es reproducible desde la semilla.
+
+## Servidor y cliente (fases 2-8)
+- **Servidor autoritativo**: el cliente solo envía intenciones; el servidor valida con el motor y reparte a cada móvil únicamente su vista (`getPlayerView`). El tablero recibe la vista pública (sin manos ni cartas ocultas).
+- **Reconexión**: cada móvil guarda un token en `localStorage`; recargar la página devuelve el mismo asiento. Si se abre el asiento en otro dispositivo, el primero recibe «Sesión abierta en otro dispositivo».
+- **Anfitrión**: quien crea la sala desde `/board` recibe un `hostToken` que se guarda en su navegador y se quita de la URL. Solo ese tablero puede empezar, pausar, deshacer, expulsar y cambiar opciones. Otros tableros de la misma sala solo miran.
+- **Deshacer**: solo la última construcción del jugador activo, antes de tirar dados o robar carta de nuevo (el motor guarda una instantánea).
+- **Temporizador**: opcional. Al agotarse, el servidor termina el turno con acciones por defecto (descarta automáticamente, mueve el ladrón sin robar).
+- **Bots**: ocupan asientos como cualquier jugador y juegan con `chooseBotAction`; el anfitrión puede añadirlos o quitarlos en el vestíbulo. Los asientos expulsados quedan libres para que entre otra persona.
+- **Persistencia**: JSON en `DATA_DIR`, una escritura atómica por sala; al reiniciar el servidor se recuperan las salas.
+- **Modo nube y LAN**: mismo servidor. En LAN detecta la IP local, avisa si hay varias interfaces y usa esa dirección en el QR; en la nube se usa `PUBLIC_URL`.
+- **Pantalla «Despertando servidor…»**: el cliente consulta `/api/health` hasta que responde antes de abrir el socket (planes gratuitos que duermen).
+- **Elegir sitio en el móvil**: se toca cerca de un punto brillante y se confirma; la pieza se ve «fantasma» antes de construir, para evitar errores con el dedo.
+- **Sonidos**: sintetizados con Web Audio (sin archivos). Vibración solo en móvil y solo en tu turno, al descartar y al recibir una oferta.
+- **Iconos PWA**: un SVG propio (`icon.svg`); no se generan PNG para no añadir dependencias.

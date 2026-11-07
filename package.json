@@ -11,6 +11,10 @@
     "test": "pnpm -r test",
     "start": "pnpm build && pnpm --filter @hexania/server start",
     "demo": "pnpm build && pnpm --filter @hexania/server demo",
-    "dev": "pnpm --filter @hexania/server dev"
+    "dev": "pnpm --filter @hexania/server dev",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
   }
 }

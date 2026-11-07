@@ -3,3 +3,6 @@ dist
 *.log
 data
 .DS_Store
+.e2e-data
+test-results
+playwright-report
