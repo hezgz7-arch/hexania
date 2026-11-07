@@ -80,6 +80,7 @@ export function Die({ n, size = 44, rolling }: { n: number; size?: number; rolli
     5: [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]],
     6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]],
   };
+  if (rolling) return <img src={`/art/die-${n % 2 ? 1 : 2}.png`} height={size} alt="" className="die rolling" draggable={false} style={{ width: 'auto' }} />;
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" className={rolling ? 'die rolling' : 'die'} role="img" aria-label={`Dado: ${n}`}>
       <rect x="2" y="2" width="36" height="36" rx="8" fill="#f7efdb" stroke="#0b1c22" strokeWidth="2" />

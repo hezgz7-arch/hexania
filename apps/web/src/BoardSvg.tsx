@@ -1,6 +1,6 @@
 import { memo, useMemo, useRef } from 'react';
 import { buildGeometry, type GameView, type Resource } from '@hexania/engine';
-import { PLAYER_HEX, PORT_LABEL, RES_COLOR, TERRAIN_FILL } from './lib';
+import { colorKey, PLAYER_HEX, PORT_LABEL, RES_COLOR, TERRAIN_FILL } from './lib';
 
 const S = 60; // pixels per hex radius in SVG space
 
@@ -94,13 +94,18 @@ function Settlement({ x, y, color, big }: { x: number; y: number; color: string;
   );
 }
 
+/** Road bar sprite (iso, rising to the right): mirrored / rotated to lie along any of the three edge directions. */
 function Road({ x1, y1, x2, y2, color }: { x1: number; y1: number; x2: number; y2: number; color: string }) {
+  let ang = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+  if (ang > 90) ang -= 180;
+  if (ang <= -90) ang += 180;
+  const flip = ang > 0;
+  const rot = flip ? ang - 30 : ang + 30;
+  const w = 50;
+  const h = (w * 78) / 88;
   return (
-    <g strokeLinecap="round">
-      <line x1={x1} y1={y1 + 2} x2={x2} y2={y2 + 2} stroke="#3a2410" strokeWidth="14" />
-      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={shade(color, -0.3)} strokeWidth="12" />
-      <line x1={x1} y1={y1 - 1} x2={x2} y2={y2 - 1} stroke={color} strokeWidth="9" />
-      <line x1={x1} y1={y1 - 2.5} x2={x2} y2={y2 - 2.5} stroke={shade(color, 0.4)} strokeWidth="2.4" opacity=".85" />
+    <g transform={`translate(${(x1 + x2) / 2},${(y1 + y2) / 2 + 1}) rotate(${rot}) scale(${flip ? -1 : 1},1)`} filter="url(#piece-shadow)">
+      <image href={`/art/road-${colorKey(color)}.png`} x={-w / 2} y={-h / 2} width={w} height={h} />
     </g>
   );
 }

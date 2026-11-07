@@ -355,6 +355,18 @@ function Game({
           })}
         </div>
 
+        <div className="board-score" aria-label="Puntos">
+          <div className="bs-head" />
+          {[...view.players].sort((p, q) => q.publicVP - p.publicVP).map((p) => (
+            <div key={p.id} className="bs-row" style={{ ...pcVars(PLAYER_HEX[p.color]) }}>
+              <span className="seat-dot" aria-hidden />
+              <span className="bs-name">{p.name}</span>
+              <b>{p.publicVP}</b>
+            </div>
+          ))}
+          <div className="bs-foot" />
+        </div>
+
         <div className="bank" aria-label="Banco">
           <h3>Banco</h3>
           <div className="bank-row">
@@ -399,7 +411,7 @@ function Game({
 
 function HostMenu({ view, info, host, close }: { view: GameView; info: RoomInfo; host: (c: import('@hexania/engine').HostCommand) => Promise<unknown>; close: () => void }) {
   return (
-    <div className="host-menu" role="dialog" aria-label="Controles del anfitrión">
+    <div className="host-menu bracketed" role="dialog" aria-label="Controles del anfitrión">
       <div className="host-menu-head">
         <h3>Anfitrión</h3>
         <button className="btn ghost small" onClick={close}>
@@ -481,7 +493,7 @@ function Finale({ view, info, isHost, host }: { view: GameView; info: RoomInfo; 
           </button>
         )}
       </section>
-      <section className="finale-stats">
+      <section className="finale-stats bracketed b2">
         <h2>
           <img className="ico" src="/art/ico-bars.png" alt="" /> Estadísticas
         </h2>

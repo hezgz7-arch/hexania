@@ -1632,3 +1632,77 @@ h3 {
   padding-bottom: 6px;
   background: url(/art/bar-wood.png) left bottom / 100% 5px no-repeat;
 }
+
+/* ---------- scoreboard, brackets and wooden bars from the design sheet ---------- */
+.side > .board-score {
+  background: none;
+  box-shadow: none;
+  border: 0;
+  padding: 0;
+  filter: drop-shadow(0 3px 3px #3a241077);
+}
+.bs-head,
+.bs-row,
+.bs-foot {
+  width: 100%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.bs-head {
+  aspect-ratio: 162 / 40;
+  background-image: url(/art/panel-head.png);
+}
+.bs-foot {
+  aspect-ratio: 162 / 36;
+  background-image: url(/art/panel-foot.png);
+}
+.bs-row {
+  aspect-ratio: 162 / 36;
+  background-image: url(/art/panel-row.png);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14% 0 12%;
+  font-weight: 700;
+  color: #3a2410;
+}
+.bs-row .bs-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bracketed {
+  position: relative;
+}
+.bracketed::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -22px;
+  width: min(240px, 70%);
+  aspect-ratio: 240 / 63;
+  transform: translateX(-50%) scaleY(-1) scale(0.45);
+  transform-origin: center bottom;
+  background: url(/art/bracket-a.png) center / contain no-repeat;
+  pointer-events: none;
+}
+.bracketed.b2::before {
+  background-image: url(/art/bracket-b.png);
+}
+.topbar::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -8px;
+  height: 10px;
+  background: url(/art/wood-long.png) center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+.topbar {
+  position: relative;
+}
+.pcard.away .vp {
+  background-image: url(/art/hex-gray.png);
+}
