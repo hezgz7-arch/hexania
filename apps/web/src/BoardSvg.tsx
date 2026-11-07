@@ -61,6 +61,10 @@ function Patterns() {
       <pattern id="pat-desert" width="30" height="16" patternUnits="userSpaceOnUse">
         <path d="M2 11q7-8 14 0t13 0" fill="none" stroke="#a98f4d" strokeWidth="1.4" opacity=".6" />
       </pattern>
+      <radialGradient id="sea" cx="50%" cy="45%" r="75%">
+        <stop offset="0" stopColor="#4aa3d8" />
+        <stop offset="1" stopColor="#1f6aa5" />
+      </radialGradient>
       <filter id="piece-shadow" x="-30%" y="-30%" width="160%" height="160%">
         <feDropShadow dx="0" dy="1.5" stdDeviation="1.4" floodColor="#000" floodOpacity=".55" />
       </filter>
@@ -70,16 +74,55 @@ function Patterns() {
 
 const hexPoints = (vs: { x: number; y: number }[]): string => vs.map((v) => `${v.x * S},${v.y * S}`).join(' ');
 
+/** mix a #rrggbb colour towards black (k<0) or white (k>0) */
+function shade(hex: string, k: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const f = (c: number) => Math.round(k < 0 ? c * (1 + k) : c + (255 - c) * k);
+  return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`;
+}
+
+// Isometric wooden-toy pieces: lit left wall, shaded right wall, bright roof.
 function Settlement({ x, y, color, big }: { x: number; y: number; color: string; big?: boolean }) {
-  const k = big ? 1 : 0.8;
+  const k = big ? 1.12 : 0.9;
+  const lit = shade(color, 0.28);
+  const dark = shade(color, -0.32);
+  const roofL = shade(color, 0.12);
+  const roofR = shade(color, -0.12);
+  const ink = '#3a2410';
   return (
-    <g transform={`translate(${x},${y}) scale(${k})`} filter="url(#piece-shadow)">
+    <g transform={`translate(${x},${y}) scale(${k})`} filter="url(#piece-shadow)" strokeLinejoin="round" stroke={ink} strokeWidth="1.6">
+      <ellipse cx="0" cy="12" rx="17" ry="5" fill="#000" opacity=".28" stroke="none" />
       {big ? (
-        <path d="M-15 11V-1l8-5v-8l8-5 8 5v8l7 4v18z" fill={color} stroke="#0b1c22" strokeWidth="2.2" strokeLinejoin="round" />
+        <>
+          <path d="M-16 11V-3l9-4v18z" fill={lit} />
+          <path d="M-7 11V-7l9 4v18z" fill={dark} />
+          <path d="M-18 -3l11-8 9 5-11 7z" fill={roofL} />
+          <path d="M-1 8V-12l9-5 9 5v20z" fill={lit} />
+          <path d="M8 8V-17l9 5v20z" fill={dark} transform="translate(0,0)" />
+          <path d="M-3 -12l11-8 11 8-11 5z" fill={roofR} />
+          <rect x="3" y="-4" width="4" height="6" fill={ink} opacity=".45" stroke="none" />
+          <rect x="11" y="-4" width="4" height="6" fill={ink} opacity=".45" stroke="none" />
+        </>
       ) : (
-        <path d="M-12 11V-1l12-11 12 11v12z" fill={color} stroke="#0b1c22" strokeWidth="2.2" strokeLinejoin="round" />
+        <>
+          <path d="M-13 11V-1l13 5v15z" fill={lit} />
+          <path d="M0 15V4l13-5v12z" fill={dark} />
+          <path d="M-15 -1L0 -13l15 12-15 5z" fill={roofL} />
+          <path d="M0 -13l15 12-15 5z" fill={roofR} />
+          <rect x="-4" y="8" width="5" height="6" fill={ink} opacity=".45" stroke="none" />
+        </>
       )}
-      <rect x="-3" y="3" width="6" height="8" fill="#0b1c22" opacity=".35" />
+    </g>
+  );
+}
+
+function Road({ x1, y1, x2, y2, color }: { x1: number; y1: number; x2: number; y2: number; color: string }) {
+  return (
+    <g strokeLinecap="round">
+      <line x1={x1} y1={y1 + 2} x2={x2} y2={y2 + 2} stroke="#3a2410" strokeWidth="14" />
+      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={shade(color, -0.3)} strokeWidth="12" />
+      <line x1={x1} y1={y1 - 1} x2={x2} y2={y2 - 1} stroke={color} strokeWidth="9" />
+      <line x1={x1} y1={y1 - 2.5} x2={x2} y2={y2 - 2.5} stroke={shade(color, 0.4)} strokeWidth="2.4" opacity=".85" />
     </g>
   );
 }
@@ -171,15 +214,16 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
     >
       <Patterns />
 
+      {/* sea and wooden frame */}
+      <rect x={bounds.x + 4} y={bounds.y + 4} width={bounds.w - 8} height={bounds.h - 8} rx="38" fill="#7a4a22" stroke="#4a2a10" strokeWidth="4" />
+      <rect x={bounds.x + 14} y={bounds.y + 14} width={bounds.w - 28} height={bounds.h - 28} rx="30" fill="url(#sea)" stroke="#e2b04a" strokeWidth="3" />
+
       {/* ports: piers first so hexes overlap their feet */}
       {ports.map((p) => (
         <g key={`port-${p.edgeId}`} className="port">
-          <path d={`M${p.a.x * S},${p.a.y * S}L${p.px},${p.py}L${p.b.x * S},${p.b.y * S}`} stroke="#d8c08a" strokeWidth="3" fill="none" strokeLinecap="round" opacity=".9" />
-          <circle cx={p.px} cy={p.py} r="19" fill="#0e2a33" stroke="#d8c08a" strokeWidth="2.5" />
-          {p.type !== 'generic' && <circle cx={p.px} cy={p.py} r="15.5" fill={RES_COLOR[p.type]} opacity=".9" />}
-          <text x={p.px} y={p.py + 5} textAnchor="middle" className="port-label">
-            {PORT_LABEL(p.type)}
-          </text>
+          <path d={`M${p.a.x * S},${p.a.y * S}L${p.px},${p.py}L${p.b.x * S},${p.b.y * S}`} stroke="#8a5a1c" strokeWidth="4" fill="none" strokeLinecap="round" />
+          {p.type === 'generic' && <path d={`M${p.px},${p.py - 22}L${p.px + 19},${p.py - 11}V${p.py + 8}L${p.px},${p.py + 22}L${p.px - 19},${p.py + 8}V${p.py - 11}Z`} fill="#f6e6bd" stroke="#6a3f18" strokeWidth="3" strokeLinejoin="round" />}
+          {p.type !== 'generic' ? <image href={`/art/port-${p.type}.png`} x={p.px - 29} y={p.py - 35} width="58" height="70" /> : <text x={p.px} y={p.py + 5} textAnchor="middle" className="port-label">{PORT_LABEL(p.type)}</text>}
         </g>
       ))}
 
@@ -188,20 +232,12 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
         const vs = geo.hexVertices[h.id]!.map(vx);
         return (
           <g key={h.id} className={`hex terrain-${info.terrain}`}>
-            <polygon points={hexPoints(vs)} fill={TERRAIN_FILL[info.terrain]} stroke="#0e2a33" strokeWidth="3" strokeLinejoin="round" />
-            <polygon points={hexPoints(vs)} fill={`url(#pat-${info.terrain})`} pointerEvents="none" />
+            <polygon points={hexPoints(vs)} fill={TERRAIN_FILL[info.terrain]} />
+            <image href={`/art/hex-${info.terrain}.png`} x={h.x * S - 55.3} y={h.y * S - 61.5} width="110.6" height="123" pointerEvents="none" />
             {highlightHexes?.has(h.id) && <polygon points={hexPoints(vs)} fill="#fff" opacity=".28" pointerEvents="none" className="hex-glow" />}
             {info.token !== null && (
               <g transform={`translate(${h.x * S},${h.y * S})`} className="token" pointerEvents="none">
-                <circle r="19" fill="#f6ecd2" stroke="#1b2d33" strokeWidth="1.6" />
-                <text y={info.token >= 10 ? 6 : 6.5} textAnchor="middle" className={`token-num${info.token === 6 || info.token === 8 ? ' hot' : ''}`}>
-                  {info.token}
-                </text>
-                <g>
-                  {Array.from({ length: dot(info.token) }, (_, i) => (
-                    <circle key={i} cx={(i - (dot(info.token!) - 1) / 2) * 5} cy="12.5" r="1.6" fill={info.token === 6 || info.token === 8 ? '#b3261e' : '#3a3a30'} />
-                  ))}
-                </g>
+                <image href={`/art/tok-${info.token}.png`} x="-22" y="-22" width="44" height="44" />
               </g>
             )}
           </g>
@@ -219,8 +255,7 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
         const y2 = b.y * S + (a.y - b.y) * S * 0.14;
         return (
           <g key={`r${eid}`} className={fresh?.has(`r${eid}`) ? 'piece fresh' : 'piece'} filter="url(#piece-shadow)">
-            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#0b1c22" strokeWidth="13" strokeLinecap="round" />
-            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={colorOf.get(owner)} strokeWidth="8" strokeLinecap="round" />
+            <Road x1={x1} y1={y1} x2={x2} y2={y2} color={colorOf.get(owner) ?? '#888'} />
           </g>
         );
       })}
@@ -237,9 +272,7 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
 
       {/* robber */}
       <g className="robber" style={{ transform: `translate(${robberHex.x * S + 20}px, ${robberHex.y * S - 4}px)` }} pointerEvents="none" filter="url(#piece-shadow)">
-        <ellipse cx="0" cy="13" rx="12" ry="4.5" fill="#000" opacity=".35" />
-        <path d="M-9 13c0-12 3-17 9-17s9 5 9 17z" fill="#24282c" stroke="#0b0d0f" strokeWidth="1.5" />
-        <circle cx="0" cy="-10" r="6.5" fill="#24282c" stroke="#0b0d0f" strokeWidth="1.5" />
+        <image href="/art/robber.png" x="-21" y="-46" width="42" height="64" />
       </g>
 
       {/* targets */}
@@ -284,8 +317,7 @@ function BoardSvgImpl({ view, targets, picked, ghostColor, ghostKind, onPick, bu
         const b = vx(e.b);
         return (
           <g opacity=".72" pointerEvents="none">
-            <line x1={a.x * S} y1={a.y * S} x2={b.x * S} y2={b.y * S} stroke="#0b1c22" strokeWidth="13" strokeLinecap="round" />
-            <line x1={a.x * S} y1={a.y * S} x2={b.x * S} y2={b.y * S} stroke={ghostColor} strokeWidth="8" strokeLinecap="round" />
+            <Road x1={a.x * S} y1={a.y * S} x2={b.x * S} y2={b.y * S} color={ghostColor} />
           </g>
         );
       })()}

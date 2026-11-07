@@ -321,9 +321,8 @@ function GamePhone({ view, info, act, skew }: { view: GameView; info: import('@h
         <section className="hand" aria-label="Tu mano">
           {RESOURCES.map((r) => (
             <div key={r} className={`hand-card${me.hand[r] === 0 ? ' empty' : ''}`}>
-              <ResIcon r={r} size={46} />
+              <img className="card-art" src={`/art/card-${r}.png`} alt={RES_ES[r]} draggable={false} />
               <b className="hand-n">{me.hand[r]}</b>
-              <span className="hand-name">{RES_ES[r]}</span>
             </div>
           ))}
         </section>
@@ -731,7 +730,7 @@ function CardsSheet({
       {owned.length === 0 && <p className="muted">No tienes cartas de desarrollo.</p>}
       {owned.map((i) => (
         <div key={i.k} className="build-row">
-          <DevIcon size={30} />
+          <img className="dev-art" src={`/art/card-${i.k === 'knight' ? 'knight' : i.k === 'victoryPoint' ? 'vp' : 'progress'}.png`} alt="" draggable={false} />
           <div className="build-info">
             <b>
               {DEV_ES[i.k]} ×{me.dev[i.k] + me.devNew[i.k]}

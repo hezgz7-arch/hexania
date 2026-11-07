@@ -18,11 +18,11 @@ export const RES_ES: Record<Resource, string> = {
   ore: 'mineral',
 };
 export const RES_COLOR: Record<Resource, string> = {
-  lumber: '#3f7d4b',
-  brick: '#c8643b',
-  wool: '#a9cc62',
-  grain: '#e4b93f',
-  ore: '#7b8896',
+  lumber: '#2f7a3c',
+  brick: '#c4552b',
+  wool: '#9acb4f',
+  grain: '#e8b92c',
+  ore: '#7a8797',
 };
 export const TERRAIN_ES: Record<Terrain, string> = {
   forest: 'Bosque',
@@ -33,12 +33,12 @@ export const TERRAIN_ES: Record<Terrain, string> = {
   desert: 'Desierto',
 };
 export const TERRAIN_FILL: Record<Terrain, string> = {
-  forest: '#3b7448',
-  pasture: '#9cc45c',
-  fields: '#e2b73a',
-  hills: '#c1603a',
-  mountains: '#78828f',
-  desert: '#dac58c',
+  forest: '#2f7a3c',
+  pasture: '#8fca4e',
+  fields: '#eab928',
+  hills: '#c4552b',
+  mountains: '#8793a3',
+  desert: '#ecd290',
 };
 export const PLAYER_HEX: Record<PlayerColor, string> = {
   red: '#d9453d',

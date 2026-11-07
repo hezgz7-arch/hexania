@@ -10,19 +10,23 @@
   --gold: #d6ad4f;
   --gold-deep: #a9822d;
   --danger: #e2785f;
-  /* semantic */
-  --bg: var(--ink-800);
-  --surface: var(--ink-700);
-  --surface-2: var(--ink-600);
-  --text: var(--parchment);
-  --text-dim: var(--parchment-dim);
-  --accent: var(--gold);
-  --line: rgba(246, 236, 210, 0.16);
+  /* semantic: parchment, gold leaf and walnut */
+  --bg: #d99a3f;
+  --surface: #f6e6bd;
+  --surface-2: #ead09a;
+  --text: #3a2410;
+  --text-dim: #6e5233;
+  --accent: #8f3a14;
+  --gold: #e2b04a;
+  --gold-deep: #8a5a1c;
+  --wood: #9a6234;
+  --wood-dark: #5a3519;
+  --line: rgba(110, 70, 25, 0.35);
   --radius: 14px;
   --font-display: 'Alegreya SC', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --pc: #888; /* player colour, overridden per element */
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -35,7 +39,7 @@ body,
   margin: 0;
 }
 body {
-  background: radial-gradient(120% 100% at 50% 0%, var(--ink-700), var(--bg) 60%, var(--ink-900));
+  background: radial-gradient(130% 110% at 50% 20%, #f1c66b, var(--bg) 55%, #8a5326);
   color: var(--text);
   font: 400 16px/1.45 var(--font-body);
   -webkit-text-size-adjust: 100%;
@@ -637,8 +641,11 @@ select {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
 }
 .port-label {
-  font: 600 11px var(--font-body);
-  fill: var(--parchment);
+  font: 700 11px var(--font-body);
+  fill: #3a2410;
+  paint-order: stroke;
+  stroke: #fff8;
+  stroke-width: 2px;
   text-anchor: middle;
 }
 .robber {
@@ -1167,4 +1174,263 @@ nav.bar .btn.primary {
     grid-template-columns: 1fr;
     padding: 20px;
   }
+}
+
+/* ---------- theme: illustrated board-game look ---------- */
+.btn {
+  background: linear-gradient(#f9ecc7, #e6c985);
+  border: 2px solid var(--gold-deep);
+  color: var(--text);
+  box-shadow: 0 2px 0 var(--wood-dark), inset 0 1px 0 #fff9;
+}
+.btn.primary,
+.tabs button.on {
+  background: linear-gradient(#f4c85c, #d8962b);
+  color: #3a2410;
+  border-color: var(--wood-dark);
+  text-shadow: 0 1px 0 #fff6;
+}
+.btn.ghost {
+  background: #fff3d044;
+  box-shadow: none;
+}
+.btn:active:not(:disabled) {
+  box-shadow: 0 0 0 var(--wood-dark);
+  transform: translateY(2px);
+}
+input,
+select {
+  background: #fff8e2;
+  color: var(--text);
+  border: 2px solid var(--gold-deep);
+}
+.topbar,
+.pcard,
+.side > div,
+.sheet,
+.host-menu,
+.seat-card,
+.me-chip,
+.other,
+.offer-card,
+.podium li,
+.dev-strip,
+.gp-top,
+nav.bar,
+.hand-card,
+.step-btn {
+  background: linear-gradient(#fbefce, var(--surface));
+  border-color: var(--gold-deep);
+  color: var(--text);
+}
+.topbar,
+.pcard,
+.side > div,
+.sheet,
+.host-menu,
+.seat-card,
+.other,
+.offer-card,
+.podium li,
+.hand-card {
+  box-shadow: 0 0 0 2px #e9c872 inset, 0 3px 0 var(--wood-dark), 0 8px 18px #3a241055;
+}
+.sheet {
+  border: 3px solid var(--gold-deep);
+  border-bottom: 0;
+}
+.gp-top,
+nav.bar {
+  border-color: var(--wood-dark);
+  box-shadow: 0 2px 10px #3a241066;
+}
+.logo,
+.winner {
+  color: #fff3cf;
+  text-shadow: 0 2px 0 var(--wood-dark), 0 0 18px #3a241088;
+  -webkit-text-stroke: 1px var(--wood-dark);
+}
+.code,
+.code-inline,
+.vp,
+.vp-sm,
+h3,
+.dice-total {
+  color: var(--accent);
+}
+.lede,
+.muted,
+.url {
+  color: #4b3118;
+}
+.surface-text,
+.sheet .muted,
+.pcard .muted,
+.side .muted,
+.other .muted {
+  color: var(--text-dim);
+}
+.banner-text {
+  color: var(--text);
+}
+.clock {
+  background: var(--wood-dark);
+  color: #fff3cf;
+  border-color: var(--gold);
+}
+.tabs {
+  background: var(--surface-2);
+}
+.tabs button {
+  color: var(--text-dim);
+}
+.badge {
+  background: linear-gradient(#f4c85c, #d8962b);
+  border: 1px solid var(--wood-dark);
+  color: #3a2410;
+}
+.tag {
+  background: var(--surface-2);
+  color: var(--text-dim);
+}
+.seat-dot {
+  box-shadow: inset 0 -2px 3px #0005, 0 1px 2px #0006;
+}
+.stage {
+  filter: drop-shadow(0 10px 18px #3a241088);
+}
+.mini-board {
+  background: transparent;
+}
+.hand {
+  gap: 8px;
+}
+/* resource cards: coloured art area under a parchment name strip */
+.hand-card {
+  position: relative;
+  flex-direction: column-reverse;
+  padding: 6px 3px 4px;
+  border-radius: 10px;
+  border-bottom: 0;
+  background: linear-gradient(#fbefce, #ecd39a);
+}
+.hand-card .res-icon {
+  width: 100%;
+  height: auto;
+  max-width: 54px;
+}
+.hand-name {
+  width: 92%;
+  text-align: center;
+  background: #fff6dc;
+  border: 1px solid var(--gold-deep);
+  border-radius: 4px;
+  color: var(--text);
+  font: 600 0.68rem var(--font-body);
+  text-transform: capitalize;
+}
+.hand-n {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  min-width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: var(--wood-dark);
+  color: #fff3cf;
+  border: 2px solid var(--gold);
+  border-radius: 99px;
+  font: 700 0.95rem var(--font-body);
+}
+.hand-card.empty {
+  opacity: 0.55;
+}
+.step-btn {
+  color: var(--text);
+}
+/* player cards get a ribbon-style colour tab */
+.pcard,
+.other,
+.seat-card,
+.podium li {
+  border-left-width: 10px;
+  border-left-color: var(--pc);
+}
+.pcard.active {
+  box-shadow: 0 0 0 3px var(--pc), 0 8px 22px #3a241088;
+}
+.topbar {
+  border-bottom: 5px solid var(--pc);
+}
+.log li {
+  color: var(--text-dim);
+  border-left-color: var(--line);
+}
+.log li:first-child {
+  color: var(--text);
+  border-left-color: var(--accent);
+}
+.histogram .bar {
+  background: var(--gold-deep);
+}
+.histogram .bar.hot {
+  background: #b3321e;
+}
+.facts dt {
+  color: var(--text-dim);
+}
+.pause-veil {
+  background: #3a2410cc;
+  color: #fff3cf;
+}
+.splash-mark svg polygon:first-child {
+  stroke: #fff3cf;
+}
+.error,
+.why {
+  color: #a8281a;
+  font-weight: 600;
+}
+.sheet .error,
+.gp-error {
+  color: #fff;
+}
+.conn-banner {
+  background: var(--wood-dark);
+  color: #fff3cf;
+}
+.swatch.on {
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--wood-dark);
+}
+.board-svg .token circle {
+  filter: none;
+}
+
+/* ---------- sprite cards (cut from DISEÑO.png) ---------- */
+.hand-card {
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  border-radius: 9px;
+  overflow: visible;
+}
+.hand-card .card-art {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 3px 3px #3a241077);
+  user-select: none;
+}
+.hand-card.empty .card-art {
+  filter: grayscale(0.85) brightness(0.9) drop-shadow(0 2px 2px #3a241055);
+}
+.dev-art {
+  width: 46px;
+  height: auto;
+  filter: drop-shadow(0 2px 2px #3a241077);
+}
+.board-svg image {
+  image-rendering: auto;
 }
